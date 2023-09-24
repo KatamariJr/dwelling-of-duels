@@ -33,10 +33,12 @@ SLUG_REPLACEMENTS = [["'", ""]]
 
 slugify_cache = {}
 
+
 def slugify_with_cache(key):
     if key not in slugify_cache:
         slugify_cache[key] = slugify(key, replacements=SLUG_REPLACEMENTS)
     return slugify_cache[key]
+
 
 TEMPLATES.filters['slugify'] = slugify_with_cache
 
@@ -68,7 +70,7 @@ DUEL_REPLACEMENTS = [
 ]
 
 MONTH_REPLACEMENTS = [
-    #('19-TS-TornadoOfSolos', '19-09-TornadoOfSolos')
+    # ('19-TS-TornadoOfSolos', '19-09-TornadoOfSolos')
 ]
 
 # the generator uses parentheses as delimiters, use this to whitelist an artist name from the delimiting
@@ -90,24 +92,25 @@ CSS_FILES = [
     'sortable.css',
     'slider.css',
     'style.css',
-	'nanoscroller.css',
+    'nanoscroller.css',
     'other.css'
 ]
 
 JS_FILES = [s.replace('/', os.sep) for s in [
     'lib/jquery.js',
-	'lib/jquery.nanoscroller.min.js',
-	'lib/jquery.floatThead.min.js',
+    'lib/jquery.nanoscroller.min.js',
+    'lib/jquery.floatThead.min.js',
     'lib/bootstrap-transition.js',
     'lib/bootstrap-collapse.js',
     'lib/sortable.js',
     'lib/slider.js',
-	'lib/howler.min.js',
+    'lib/howler.min.js',
     'make-filter.js',
     'player.js',
     'voting.js',
-	'randomPlayer.js'
+    'randomPlayer.js'
 ]]
+
 
 def build_data():
     numberOfFolders = len(os.listdir(ARCHIVE_DIR))
@@ -123,10 +126,10 @@ def build_data():
         if currentFolderCount > quarterCount and quarter is False:
             quarter = True
             print("25%...", end='', flush=True)
-        if currentFolderCount > quarterCount*2 and half is False:
+        if currentFolderCount > quarterCount * 2 and half is False:
             half = True
             print("50%...", end='', flush=True)
-        if currentFolderCount > quarterCount*3 and threeQuarters is False:
+        if currentFolderCount > quarterCount * 3 and threeQuarters is False:
             threeQuarters = True
             print("75%...", end='', flush=True)
         if currentFolderCount >= numberOfFolders and full is False:
@@ -241,7 +244,7 @@ def get_month_data(month_dir):
                 'banner_gif': banner_gif,
                 'has_archive': month_dir_part + '.zip' in month_files,
                 'youtube_link': youtube_link,
-                'id': hashlib.md5((song_data.title+song_data.genre.split(', ')[0]+duel).encode()).hexdigest()[:10]
+                'id': hashlib.md5((song_data.title + song_data.genre.split(', ')[0] + duel).encode()).hexdigest()[:10]
             })
         except BaseException as err:
             print("error handling {0}: {1}".format(song_filename, err))
@@ -261,6 +264,7 @@ def parse_artist_links():
     lines = open('artist-links.csv').read().strip().split('\n')
 
     return {a: l for a, l in [x.split(', ') for x in lines]}
+
 
 def parse_banner_artist_links():
     lines = open('banner-artist-links.csv').read().strip().split('\n')
@@ -290,7 +294,7 @@ def set_template_globals():
     TEMPLATES.globals['artist_links'] = parse_artist_links()
     TEMPLATES.globals['banner_artist_links'] = parse_banner_artist_links()
 
-    #sort DATA by month name so we always get the actual latest month
+    # sort DATA by month name so we always get the actual latest month
     DATA.sort(key=lambda x: x['month_dir'])
 
     if LATEST_MONTH_OVERRIDE:
@@ -375,12 +379,12 @@ def build_pages(kind):
     dupeCheckDict = collections.defaultdict()
 
     for key, song_list in song_lists.items():
-        
-        #loop over all keys we've gone through and compare slugs
+
+        # loop over all keys we've gone through and compare slugs
         for key2, val in dupeCheckDict.items():
             if slugify_with_cache(key) == slugify_with_cache(key2):
                 print("dupe detected: {} vs {} \n  {}\n  {}".format(key, key2, song_list, val))
-            
+
         dupeCheckDict[key] = song_list
 
         path = os.path.join(kind, slugify_with_cache(key))
@@ -391,10 +395,12 @@ def build_pages(kind):
 
     write_page(kind, {'objs': song_lists})
 
+
 def build_random():
     os.mkdir(os.path.join(OUT_DIR, 'player'))
     song_lists = collections.defaultdict(list)
     write_page('random', {'objs': DATA}, 'player')
+
 
 def build_index():
     raw_content = open('front-page.md').read()
@@ -420,7 +426,7 @@ def write_page(template_name, context, path=None, name=None):
 
     template = TEMPLATES.get_template(template_name + '.html')
 
-    #get image for metadata if this is a duel
+    # get image for metadata if this is a duel
     if template_name == 'duel':
         context['metaImage'] = True
 
