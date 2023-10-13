@@ -7,162 +7,17 @@
 {%- block title -%}Submit{%- endblock -%}
 
 {%- block content -%}
-<style>
-    input {
-        background: none;
-        border: 2px solid darkred;
-        border-radius: 5px;
-        padding: 0px 5px;
-    }
-    textarea {
-        background: none;
-        border: 2px solid darkred;
-        border-radius: 5px;
-        padding: 0px 5px;
-    }
-    button {
-        color: black;
-        padding: 2px 7px;
-    }
-    form {
-        display: grid;
-        max-width: 579px;
-        grid-template-columns: 1fr 1fr;
-        grid-row-gap: 5px;
-    }
-    input[type='radio'] {
-        transform: scale(1.3);
-    }
-    #someRules {
-        max-width: 579px;
-    }
-    progress {
-        width: 100%;
-        max-width: 579px;
-    }
-</style>
-<script src="https://www.google.com/recaptcha/api.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script>
-    function onSubmit(token) {
-        let theWholeForm = document.getElementById("submit-form");
-        let submitButton = document.getElementById("submitButton");
-        let bodyFormData = new FormData(theWholeForm);
-        let successBox = document.getElementById("successBox");
-        let progressBar = document.getElementById("progressBar");
 
-        //ensure all fields filled in
-        console.log(bodyFormData)
-        if (bodyFormData.get("submitterEmail") === "" ||
-                bodyFormData.get("submitterEmailConfirm") === "" ||
-                bodyFormData.get("songTitle") === "" ||
-                bodyFormData.get("artistNames") === "" ||
-                bodyFormData.get("gameNames") === "" ||
-                bodyFormData.get("isAlt") === null ||
-                bodyFormData.get("songFile").size === 0){
-            successBox.innerText = "Must fill in all required fields!";
-            return;
-        }
+<h1>Submit</h1>
 
-        if (bodyFormData.get("submitterEmail") !== bodyFormData.get("submitterEmailConfirm")){
-            successBox.innerText = "Email fields mismatch!";
-            return;
-        }
+<div class="hline-r"></div>
 
-        if (!bodyFormData.get("songFile").name.toLowerCase().endsWith(".mp3")){
-            successBox.innerText = "File must be an MP3";
-            return;
-        }
+<p>
+  Redirecting to new submission page...
+</p>
 
-        successBox.innerText = "Submitting...";
-        axios({
-            method: "post",
-            url: "https://5fn6tt1ii8.execute-api.us-east-1.amazonaws.com/dev/submit",
-            //url: "http://localhost:8000/",
-            data: {
-                submitterEmail: bodyFormData.get("submitterEmail"),
-                songTitle: bodyFormData.get("songTitle"),
-                artistNames: bodyFormData.get("artistNames"),
-                gameNames: bodyFormData.get("gameNames"),
-                isAlt: bodyFormData.get("isAlt"),
-                filename: bodyFormData.get("songFile").name,
-                comments: bodyFormData.get("comments"),
-                lyrics: bodyFormData.get("lyrics"),
-                "g-recaptcha-response": token,
-            },
-            headers: { "Content-Type": `application/json` },
-        })
-            .then(function (response) {
-                if (!response.data.success) {
-                    throw response;
-                }
+{%- endblock -%}
 
-                successBox.innerText = "Uploading file...";
-                progressBar.hidden = false;
-                axios({
-                    method: "put",
-                    url: response.data.fileURL,
-                    data: bodyFormData.get("songFile"),
-                    onUploadProgress: (progressEvent) => {
-                       console.log(progressEvent.loaded + ' ' + progressEvent.total);
-                       progressBar.value = progressEvent.loaded / progressEvent.total;
-                       //this.updateProgressBarValue(progressEvent);
-                }
-                }).then(function(response) {
-                    //handle success
-                    successBox.innerText = "Success! Please reload the page to submit another song";
-                    submitButton.disabled = true;
-                    console.log("success", response);
-                }).catch(function (response) {
-                    //handle error
-                    successBox.innerText = `Error :(\n${response.data.error}`;
-                    console.log("error", response);
-                });
-
-            })
-            .catch(function (error) {
-                //handle error
-                successBox.innerText = `Error :(\n${error}`;
-                console.log("error", error);
-            });
-    }
-</script>
-
-    <h1>Submit a song!</h1>
-    <p>Check the following before submitting your entry:</p>
-    <ul id="someRules">
-        <li>Your song fits the current month's theme</li>
-        <li>Your song is in MP3 format (recommend 320 kbps VBR/CBR)</li>
-        <li>Your song is at least 2 minutes in length (alt entries may be shorter)</li>
-        <li>You followed the rules about <a href="/faq/#can-i-submit-more-than-one-song-">being on more than one song</a></li>
-        <li>Your <a href="/games">game</a> and <a href="/artists">artist</a> names match the formatting found elsewhere on the site (for unlisted games, provide a title the same way Wikipedia would list it)</li>
-    </ul>
-    <br>
-
-<form name="submit-form" id="submit-form" enctype="multipart/form-data">
-    <label for="submitterEmail">Your email address</label><input name="submitterEmail" id="submitterEmail" type="email">
-    <label for="submitterEmailConfirm">Confirm email address</label><input name="submitterEmailConfirm" id="submitterEmailConfirm" type="email">
-    <label for="songTitle">Arrangement Title</label><input name="songTitle" id="songTitle" type="text">
-    <label for="artistNames">Artist names (separate with comma)</label><input name="artistNames" id="artistNames" type="text">
-    <label for="gameNames">Game names (separate with comma)</label><input name="gameNames" id="gameNames" type="text">
-    <label for="lyrics">Lyrics (optional)</label><textarea name="lyrics" id="lyrics" type="text"></textarea>
-    <label for="comments">Comments (optional)</label><textarea name="comments" id="comments" type="text"></textarea>
-    <label>Is it a Main or an Alt submission?</label>
-
-    <div><input id="isAltNo" name="isAlt" value="false" type="radio"><label for="IsAltNo">Main</label></div>
-    <div></div>
-    <div><input id="isAltYes" name="isAlt" value="true" type="radio"><label for="IsAltYes">Alt</label></div>
-    <label for="songFile">Songfile</label><input name="songFile" id="songFile" type="file" accept=".mp3, audio/mpeg">
-    <button class="g-recaptcha"
-            data-sitekey="6Lc64iMkAAAAAOoU2SRnoXmHdqb5KvTLU7xONWGJ"
-            data-callback='onSubmit'
-            data-action='submitSong'
-            id="submitButton">Submit</button>
-
-</form>
-<div>
-    <p id="successBox"></p>
-    <progress id="progressBar" hidden=true></progress>
-</div>
-
+{%- block extra_js -%}
+  window.location = 'http://new.dwellingofduels.net/submit';
 {%- endblock -%}
