@@ -383,7 +383,7 @@ def build_pages(kind):
         # loop over all keys we've gone through and compare slugs
         for key2, val in dupeCheckDict.items():
             if slugify_with_cache(key) == slugify_with_cache(key2):
-                print("dupe detected: {} vs {}\n".format(key, key2))
+                print("dupe detected: {} vs {}, see ./logs directory for more info\n".format(key, key2))
                 append_dupe_log(key, key2, song_list, val)
 
         dupeCheckDict[key] = song_list
