@@ -8,3 +8,4 @@ templates/.eslintrc
 front-page.md
 site.cfg
 venv
+logs

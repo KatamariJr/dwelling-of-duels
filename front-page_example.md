@@ -10,4 +10,4 @@ This month is a free month! Any track from any video game that fits our typical 
 
 Thanks to [Impact Soundworks](https://impactsoundworks.com/), the winner will be getting a prize - one of the following ISW libraries: [Shreddage Drums](https://impactsoundworks.com/product/shreddage-drums/), [Shreddage Bass 2](https://impactsoundworks.com/product/shreddage-bass-2/), [Shreddage](https://impactsoundworks.com/product/shreddage-1/), [Shreddage 2](https://impactsoundworks.com/product/shreddage-ii-absolute-electric-guitar/) or [Super Audio Cart](https://impactsoundworks.com/product/super-audio-cart/)!
 
-Also: Did you know that we now have a [Discord server](https://discord.gg/RqRAMFY)? As well as a whole new [Music Player](http://dwellingofduels.net/player/)? Keep up with the times!
+Also: Did you know that we now have a [Discord server](https://discord.gg/eyzAfh7mT2)? As well as a whole new [Music Player](http://dwellingofduels.net/player/)? Keep up with the times!
