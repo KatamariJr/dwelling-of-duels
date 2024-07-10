@@ -15,13 +15,13 @@
   <table class="table" data-sortable>
     <thead>
       <tr>
-        <th data-sorted="true" data-sorted-direction="ascending">
+        <th data-sorted="true" data-sorted-direction="ascending" data-sortable-type="alpha">
           Name {{ filter_input() }}
         </th>
         <th>♫</th>
-        <th class="gold">&bull;</th>
-        <th class="silver">&bull;</th>
-        <th class="bronze">&bull;</th>
+        <th class="gold" data-sortable-type="numeric">&bull;</th>
+        <th class="silver" data-sortable-type="numeric">&bull;</th>
+        <th class="bronze" data-sortable-type="numeric">&bull;</th>
       </tr>
     </thead>
     <tbody>
