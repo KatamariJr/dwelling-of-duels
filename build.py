@@ -66,7 +66,8 @@ DUEL_REPLACEMENTS = [
     ('DoD11-11S', 'DoD11-11'),
     ('DoD13-0910', 'DoD13-09'),
     ('DoD19-TS', 'DoD19-09'),
-    ('DoD23-07J', 'DoD23-07')
+    ('DoD23-07J', 'DoD23-07'),
+    ('DoD24-09J', 'DoD24-09')
 ]
 
 MONTH_REPLACEMENTS = [
@@ -246,6 +247,11 @@ def get_month_data(month_dir):
                 'youtube_link': youtube_link,
                 'id': hashlib.md5((song_data.title + song_data.genre.split(', ')[0] + duel).encode()).hexdigest()[:10]
             })
+        except ValueError as err:
+            print("error handling {0}: {1}".format(song_filename, err))
+            print("DOES THIS DUEL NEED TO BE ADDED TO THE 'DUEL_REPLACEMENTS' LIST?")
+            traceback.print_exc()
+            quit()
         except BaseException as err:
             print("error handling {0}: {1}".format(song_filename, err))
             traceback.print_exc()

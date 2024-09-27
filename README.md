@@ -97,3 +97,4 @@ a duel.
 - make a script that automatically turns any banner art file into other files: the original art file, a smaller but still 1000x1000 jpg file if the original was larger, a 250x250 jpg with some light compression on it to be embdedded in the mp3s, a jpg version of the original file if it was not already in jpg format.
 - cleanup old files that dont get used
 - move some scripts like aws_archive_03-09_sync.sh to a scripts folder (maybe not because there is already a scripts folder living above this one)
+- figure out a way that we can read all mp3 data into a local db file and use that to generate the site, rather than making the entirety of the archive folder need to be rescanned on every site tweak. It would be great to not have to wait 5 minutes to regen the site after changing the voting deadline.
