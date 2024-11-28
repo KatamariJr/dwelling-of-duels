@@ -257,6 +257,13 @@ def get_month_data(month_dir):
             traceback.print_exc()
             quit()
 
+    # sort songs so they can be in a predictable order, regardless of how the filesystem fed them to us
+    # if rank is Anonymous DoD Contestant, then this is the currently voting month where ranks havent been established yet.
+    if songs[0]['rank'] == 'Anonymous DoD Contestant':
+        songs = sorted(songs, key=lambda x: ''.join(x['games'])+x['title'], reverse=False)
+    else:
+        songs = sorted(songs, key=lambda x: x['rank'], reverse=False)
+
     return songs
 
 
