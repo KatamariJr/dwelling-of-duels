@@ -12,24 +12,27 @@ This is the static site generator for [Dwelling of Duels].
 
 ## Configuration
 
+### Config file
+
 Edit `site.cfg` to configure your build of the site. An example has been
 provided for you as `site_example.cfg` and must be renamed before use. It has
 the following settings:
 
-- `voting` controls whether or not the site is in voting mode. Valid values are
+- `voting` controls whether the site is in voting mode. Valid values are
 `on` and `off`.
 - `deadline_date` is the date displayed in the deadline section of the sidebar.
-It must be a date of the form `YYYY-MM-DD`. For example: `2016-01-31`.
+It must be a date of the form `YYYY-MM-DD`. For example: `2025-01-31`.
 - `deadline_time` is the time displayed in the deadline section of the sidebar.
 - `archive_dir` is the name of the local directory that holds the DoD archive
 folder. It defaults to `dodarchive`. You probably don't need to change this.
 - `archive_url` is the url of the webhost where the `archive_dir` directory is 
 hosted. In testing, this will be `localhost`, while in production it will
-probably be something like `http://dwellingofduels.net`. This should
+probably be something like `https://www.dwellingofduels.net`. This should
 not have a trailing slash.
 - `winners_month_override` allows you to force a specific month to appear as the 
-winners block at the top of the page. Only needed if you run two duels at the 
-same time, like we did in Aug 2022 for Free + Dreamcast duels.
+winners block at the top of the page. Sometimes needed if non-standard months 
+(such as Tornado of Solos) are messing up the sorting. Otherwise, needed if you
+run two duels at the same time, like we did in Aug 2022 for Free + Dreamcast duels.
 - `latest_month_override` changes which duel is considered 'in voting'. This is
 the duel that gets sliders on its page, as well as being redirected to from the
 `/voting` route and other 'vote now' buttons. Only noticeable if `voting` is set 
@@ -38,6 +41,15 @@ to `on`.
 The `deadline_*` settings refer to the voting deadline when `voting` is set to
 `on` and the submission deadline when `voting` is set to off.
 
+### Front Page Content
+
+Edit `front-page.md` to add content to the front page of the site under the
+banner image. An example has been provided for you as `front-page_example.cfg` and
+must be renamed before use. This file will be parsed as [Markdown] when you run
+`build.py`.
+
+### Artist Links
+
 Add artist links to the `artist-links.csv` file.
 
 ## Usage
@@ -45,26 +57,31 @@ Add artist links to the `artist-links.csv` file.
 Ensure that the `archive_dir` you specified in `site.cfg` directory is in the
 same directory as `build.py`.
 
-To build for deploying to a web server:
-
-`python build.py`
-
-To build for local testing:
-
-`python build.py test`
-or
-Double click on `localserver.bat` to build a test site and run a python server.
+To build and test the site:
+`make buildAndServe`
 You will then be able to visit `localhost:8000` in your browser and browse the site.
 
-In either of the above scenarios, you will find a `deploy` directory containing
-the newly-built site.
+After building the site, the content is placed in the `deploy` directory. See "Scripts" for
+information on uploading the site.
 
-## Front Page Content
+### Scripts
 
-Edit `front-page.md` to add content to the front page of the site under the
-banner image. An example has been provided for you as `front-page_example.cfg` and
-must be renamed before use. This file will be parsed as [Markdown] when you run
-`build.py`.
+A number of scripts are provided for site management. 
+
+THESE SCRIPTS CAN BE DESTRUCTIVE. RUNNING THEM OUTSIDE OF THIS FOLDER COULD RESULT IN DELETION OF S3 CONTENT.
+
+| Script                        | Operation                                                                                                                                                     |
+|-------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| aws_archive_sync.sh           | Synchronizes the entire `dodarchive` directory with the S3 bucket. Deletes anything that exists in S3 but not locally.                                        |
+| aws_archive_03-09_sync.sh     | Like `aws_archive_sync.sh`, but only syncs content from 2003-2009                                                                                             |
+| aws_archive_10-19_sync.sh     | Like `aws_archive_sync.sh`, but only syncs content from 2010-2019                                                                                             |
+| aws_archive_20-29_sync.sh     | Like `aws_archive_sync.sh`, but only syncs content from 2020-2029                                                                                             |
+| aws_archive_this_year_sync.sh | Like `aws_archive_sync.sh`, but only syncs content from 2024. *This does not automatically update each year. The script must be modified after the new year.* |
+| aws_cloudfront_invalidate.sh  | Resets the AWS Cloudfront cache. All other scripts automatically invoke this script. Almost never needs to be run manually.                                   |
+| aws_html_sync.sh              | Synchronizes the entire `deploy` directory with the `www.dwellingofduels.net` S3 bucket. Deletes anything that exists in S3 but not locally.                  |
+| make_zips.sh                  | Enters each directory in `dodarchive`, removes the existing zip file and creates a new one.                                                                   |
+
+To upload this to the actual webpage, run `./aws_html_sync.sh`
 
 ## DoD Lifecycle Example
 
@@ -87,14 +104,9 @@ a duel.
 3. Set `voting` to `on` in `site.cfg`.
 4. Regenerate the site (see Usage section above).
 
+## Build Process in a Nutshell
+
+
 [Dwelling of Duels]: http://dwellingofduels.net/
 [Python 3]: https://www.python.org/
 [Markdown]: https://daringfireball.net/projects/markdown/syntax
-
-
-
-# TODO
-- make a script that automatically turns any banner art file into other files: the original art file, a smaller but still 1000x1000 jpg file if the original was larger, a 250x250 jpg with some light compression on it to be embdedded in the mp3s, a jpg version of the original file if it was not already in jpg format.
-- cleanup old files that dont get used
-- move some scripts like aws_archive_03-09_sync.sh to a scripts folder (maybe not because there is already a scripts folder living above this one)
-- figure out a way that we can read all mp3 data into a local db file and use that to generate the site, rather than making the entirety of the archive folder need to be rescanned on every site tweak. It would be great to not have to wait 5 minutes to regen the site after changing the voting deadline.

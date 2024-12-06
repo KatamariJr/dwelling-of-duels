@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -o errexit
+
 cd dodarchive
 for dir in */; do
     echo $dir
