@@ -257,6 +257,13 @@ def get_month_data(month_dir):
             traceback.print_exc()
             quit()
 
+    # sort songs so they can be in a predictable order, regardless of how the filesystem fed them to us
+    songs = sorted(songs, key=lambda x: ''.join(x['games']) + x['title'], reverse=False)
+
+    # if rank is Anonymous DoD Contestant, then this is the currently voting month where ranks havent been established yet.
+    if not (len(songs) > 0 and songs[0]['rank'] == 'Anonymous DoD Contestant'):
+        songs = sorted(songs, key=lambda x: x['rank'], reverse=False)
+
     return songs
 
 
@@ -389,7 +396,7 @@ def build_pages(kind):
         # loop over all keys we've gone through and compare slugs
         for key2, val in dupeCheckDict.items():
             if slugify_with_cache(key) == slugify_with_cache(key2):
-                print("dupe detected: {} vs {}, see ./logs directory for more info\n".format(key, key2))
+                print("dupe detected: '{}' vs '{}', see ./logs directory for more info\n".format(key, key2))
                 append_dupe_log(key, key2, song_list, val)
 
         dupeCheckDict[key] = song_list
