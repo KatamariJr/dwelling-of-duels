@@ -81,7 +81,9 @@ THESE SCRIPTS CAN BE DESTRUCTIVE. RUNNING THEM OUTSIDE OF THIS FOLDER COULD RESU
 | aws_html_sync.sh              | Synchronizes the entire `deploy` directory with the `www.dwellingofduels.net` S3 bucket. Deletes anything that exists in S3 but not locally.                  |
 | make_zips.sh                  | Enters each directory in `dodarchive`, removes the existing zip file and creates a new one.                                                                   |
 
-To upload this to the actual webpage, run `./aws_html_sync.sh`
+To run a script, invoke it like so: `./aws_html_sync.sh`
+
+
 
 ## DoD Lifecycle Example
 
@@ -93,16 +95,18 @@ a duel.
 1. Ensure that all tagged songs and ancillary files (banner image, listening
    log, etc) for the duel that just ended are in the `archive_dir` both locally
    and on the server.
-2. Set `voting` to `off` in `site.cfg`.
+2. Open `site.cfg`, set `voting` to `off`, and change `deadline_date` and `deadline_time` to the submission deadline.
 3. Edit front page content in `front-page.md`.
 4. Regenerate the site (see Usage section above).
+5. Upload the site content by running `make uploadAll`
 
 #### Voting
 
 1. Create the new duel's directory in `archive_dir`.
 2. Add anonymous MP3s and `banner.jpg` to the new duel's directory.
-3. Set `voting` to `on` in `site.cfg`.
+3. Open `site.cfg`, set `voting` to `on`, and change `deadline_date` and `deadline_time` to the voting deadline.
 4. Regenerate the site (see Usage section above).
+5. Upload the site content by running `make uploadAll`
 
 ## Build Process in a Nutshell
 
