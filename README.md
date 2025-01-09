@@ -85,7 +85,7 @@ To run a script, invoke it like so: `./aws_html_sync.sh`
 
 
 
-## DoD Lifecycle Example
+## DoD Lifecycle
 
 Below are instructions on how to use the site through the different phases of
 a duel.
@@ -109,6 +109,12 @@ a duel.
 5. Upload the site content by running `make uploadAll`
 
 ## Build Process in a Nutshell
+
+1. All mp3s are read, and their tags are collected, processed, and stored in-memory as a kind of database that only exists 
+   for the duration of the build process.
+2. Looping through the data, each artist, game, and duel gets its own HTML page created, along with all the indexes for each.
+3. Other pages like the song player, faq, rules, submission page, and front page are created.
+4. Javascript and CSS files are bundled together into one file each.
 
 
 [Dwelling of Duels]: http://dwellingofduels.net/
