@@ -5,6 +5,6 @@ set -o errexit
 cd dodarchive
 for dir in */; do
     echo $dir
-    ( cd "$dir" && rm "${dir%/}".zip )
+    ( cd "$dir" && rm -f "${dir%/}".zip )
     ( cd "$dir" && zip -r "${dir%/}".zip . )
 done
