@@ -67,7 +67,8 @@ DUEL_REPLACEMENTS = [
     ('DoD13-0910', 'DoD13-09'),
     ('DoD19-TS', 'DoD19-09'),
     ('DoD23-07J', 'DoD23-07'),
-    ('DoD24-09J', 'DoD24-09')
+    ('DoD24-09J', 'DoD24-09'),
+    ('DoD25-TS', 'DoD25-04')
 ]
 
 MONTH_REPLACEMENTS = [
