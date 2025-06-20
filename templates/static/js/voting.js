@@ -1,10 +1,10 @@
 const VOTING_LABELS = [
-  'Terrible',
   'Bad',
-  'Below Average',
+  'Poor',
+  'Subpar',
   'Average',
-  'Above Average',
   'Good',
+  'Great',
   'Incredible'
 ];
 
